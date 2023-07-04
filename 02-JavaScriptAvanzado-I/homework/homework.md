@@ -6,8 +6,10 @@ Determiná que será impreso en la consola, sin ejecutar el código.
 
 > Investiga cuál es la diferencia entre declarar una variable con `var` y directamente asignarle un valor.
 
+///declarar una variable con var permite el hoisting y tiene un alcance de función o global, mientras que asignar un valor directamente a una variable crea una variable global o local sin hoisting. Es recomendable utilizar let o const en lugar de var para una mejor gestión de las variables y evitar problemas de hoisting y alcance.
+
 ```javascript
-x = 1;
+x = 1;   
 var a = 5;
 var b = 10;
 var c = function (a, b, c) {
@@ -77,22 +79,7 @@ console.log(pm);
 ¿Cuál crees que será el resultado de la ejecución de estas operaciones?:
 
 ```javascript
-6 / "3"
-"2" * "3"
-4 + 5 + "px"
-"$" + 4 + 5
-"4" - 2
-"4px" - 2
-7 / 0
-{}[0]
-parseInt("09")
-5 && 2
-2 && 5
-5 || 0
-0 || 5
-[3]+[3]-[10]
-3>2>1
-[] == ![]
+
 ```
 
 > Si te quedó alguna duda repasá con [este artículo](http://javascript.info/tutorial/object-conversion).
@@ -113,6 +100,7 @@ function test() {
 }
 
 test();
+// En el código dado, la variable a se declara dentro de la función test(), pero se imprime antes de que se le asigne un valor. Debido al hoisting, la declaración de la variable a se eleva hacia arriba, pero su asignación no. En cuanto al segundo console.log(foo()), la función foo() también se declara dentro de test(). Sin embargo, a diferencia de las variables, las funciones también se elevan con su definición completa. Por lo tanto, la función foo() ya está disponible en el momento de la llamada, y devuelve el valor 2.
 ```
 
 Y el de este código? :
@@ -129,6 +117,7 @@ function getFood(food) {
 }
 
 getFood(false);
+//debido al hoisting y al alcance de las variables declaradas con var, el valor de snack dentro de la función getFood() será undefined cuando no se cumpla la condición del bloque condicional.
 ```
 
 ### This
@@ -147,11 +136,15 @@ var obj = {
    },
 };
 
+
 console.log(obj.prop.getFullname());
 
 var test = obj.prop.getFullname;
 
 console.log(test());
+///En la primera llamada console.log(obj.prop.getFullname()), se accede al método getFullname() dentro del objeto prop en el objeto obj. Al invocar este método utilizando obj.prop.getFullname(), la palabra clave this dentro de la función hace referencia al objeto en el contexto de la llamada, que en este caso es el objeto prop. Por lo tanto, this.fullname se refiere a la propiedad fullname dentro del objeto prop, que es "Aurelio De Rosa".
+
+//En la segunda llamada console.log(test()), se asigna la función obj.prop.getFullname a la variable test. Al invocar test(), la función se ejecuta en el contexto global, y la palabra clave this hace referencia al objeto global (en este caso, window en un entorno de navegador). Como no hay una propiedad fullname en el objeto global, se busca en el alcance más externo y se encuentra la variable fullname con el valor "Juan Perez". Por lo tanto, se imprime "Juan Perez".
 ```
 
 ### Event loop
@@ -171,6 +164,7 @@ function printing() {
 }
 
 printing();
+//En resumen, el orden de impresión en la consola se ve afectado por el tiempo de espera especificado en los setTimeout. Los bloques de código se ejecutan en la pila de ejecución en el orden en que se agregaron a la cola de tareas, pero su tiempo de espera determina cuándo se moverán de la cola de tareas a la pila de ejecución para su ejecución real.
 ```
 
 </br >

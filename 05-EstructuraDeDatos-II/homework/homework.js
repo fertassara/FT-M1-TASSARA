@@ -10,9 +10,95 @@ Implementar la clase LinkedList, definiendo los siguientes métodos:
   search(isEven), donde isEven es una función que retorna true cuando recibe por parámetro un número par, busca un nodo cuyo valor sea un número par.
   En caso de que la búsqueda no arroje resultados, search debe retornar null.
 */
-function LinkedList() {}
+function Node(value) {
+  this.value = value;
+  this.next = null;
+}
 
-function Node(value) {}
+function LinkedList() {
+  this.head = null;
+}
+
+LinkedList.prototype.add = function(value) {
+  const newNode = new Node(value);
+
+  if (this.head === null) {
+    this.head = newNode;
+  } else {
+    let current = this.head;
+    while (current.next !== null) {
+      current = current.next;
+    }
+    current.next = newNode;
+  }
+};
+
+LinkedList.prototype.remove = function() {
+  if (this.head === null) {
+    return null;
+  }
+
+  let current = this.head;
+  let previous = null;
+
+  if (current.next === null) {
+    this.head = null;
+    return current.value;
+  }
+
+  while (current.next !== null) {
+    previous = current;
+    current = current.next;
+  }
+
+  previous.next = null;
+  return current.value;
+};
+
+LinkedList.prototype.search = function(param) {
+  if (this.head === null) {
+    return null;
+  }
+
+  let current = this.head;
+
+  if (typeof param === 'function') {
+    while (current !== null) {
+      if (param(current.value)) {
+        return current.value;
+      }
+      current = current.next;
+    }
+  } else {
+    while (current !== null) {
+      if (current.value === param) {
+        return current.value;
+      }
+      current = current.next;
+    }
+  }
+
+  return null;
+};
+
+const list = new LinkedList();
+list.add(1);
+list.add(2);
+list.add(3);
+
+console.log(list.search(3)); // Resultado: 3
+
+const isEven = function(value) {
+  return value % 2 === 0;
+};
+
+console.log(list.search(isEven)); // Resultado: 2
+
+console.log(list.remove()); // Resultado: 3
+console.log(list.remove()); // Resultado: 2
+console.log(list.remove()); // Resultado: 1
+console.log(list.remove()); // Resultado: null
+
 
 /* EJERCICIO 2
 Implementar la clase HashTable.
@@ -27,7 +113,67 @@ La clase debe tener los siguientes métodos:
 
 Ejemplo: supongamos que quiero guardar {instructora: 'Ani'} en la tabla. Primero puedo chequear, con hasKey, si ya hay algo en la tabla con el nombre 'instructora'; luego, invocando set('instructora', 'Ani'), se almacenará el par clave-valor en un bucket específico (determinado al hashear la clave)
 */
-function HashTable() {}
+function HashTable(numBuckets = 35) {
+  this.numBuckets = numBuckets;
+  this.buckets = new Array(numBuckets).fill(null).map(() => []);
+}
+
+HashTable.prototype.hash = function(key) {
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) {
+    hash += key.charCodeAt(i);
+  }
+  return hash % this.numBuckets;
+};
+
+HashTable.prototype.set = function(key, value) {
+  if (typeof key !== 'string') {
+    throw new TypeError('La clave debe ser una cadena de caracteres (string).');
+  }
+  const index = this.hash(key);
+  const bucket = this.buckets[index];
+
+  for (let i = 0; i < bucket.length; i++) {
+    if (bucket[i][0] === key) {
+      bucket[i][1] = value;
+      return;
+    }
+  }
+
+  bucket.push([key, value]);
+};
+
+HashTable.prototype.get = function(key) {
+  if (typeof key !== 'string') {
+    throw new TypeError('La clave debe ser una cadena de caracteres (string).');
+  }
+  const index = this.hash(key);
+  const bucket = this.buckets[index];
+
+  for (let i = 0; i < bucket.length; i++) {
+    if (bucket[i][0] === key) {
+      return bucket[i][1];
+    }
+  }
+
+  return undefined;
+};
+
+HashTable.prototype.hasKey = function(key) {
+  if (typeof key !== 'string') {
+    throw new TypeError('La clave debe ser una cadena de caracteres (string).');
+  }
+  const index = this.hash(key);
+  const bucket = this.buckets[index];
+
+  for (let i = 0; i < bucket.length; i++) {
+    if (bucket[i][0] === key) {
+      return true;
+    }
+  }
+
+  return false;
+};
 
 // No modifiquen nada debajo de esta linea
 // --------------------------------

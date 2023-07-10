@@ -9,8 +9,101 @@
   - breadthFirstForEach: recorre el árbol siguiendo el orden breadth first (BFS)
   El ábrol utilizado para hacer los tests se encuentra representado en la imagen bst.png dentro del directorio homework.
 */
-function BinarySearchTree() {}
-
+class BinarySearchTree {
+   constructor(value) {
+     this.value = value;
+     this.left = null;
+     this.right = null;
+   }
+ 
+   size() {
+     let count = 1;
+ 
+     if (this.left) {
+       count += this.left.size();
+     }
+ 
+     if (this.right) {
+       count += this.right.size();
+     }
+ 
+     return count;
+   }
+ 
+   insert(value) {
+     if (value <= this.value) {
+       if (this.left) {
+         this.left.insert(value);
+       } else {
+         this.left = new BinarySearchTree(value);
+       }
+     } else {
+       if (this.right) {
+         this.right.insert(value);
+       } else {
+         this.right = new BinarySearchTree(value);
+       }
+     }
+   }
+ 
+   contains(value) {
+     if (value === this.value) {
+       return true;
+     } else if (value < this.value) {
+       if (this.left) {
+         return this.left.contains(value);
+       } else {
+         return false;
+       }
+     } else {
+       if (this.right) {
+         return this.right.contains(value);
+       } else {
+         return false;
+       }
+     }
+   }
+ 
+   depthFirstForEach(callback, order = "in-order") {
+     if (order === "pre-order") {
+       callback(this.value);
+     }
+ 
+     if (this.left) {
+       this.left.depthFirstForEach(callback, order);
+     }
+ 
+     if (order === "in-order") {
+       callback(this.value);
+     }
+ 
+     if (this.right) {
+       this.right.depthFirstForEach(callback, order);
+     }
+ 
+     if (order === "post-order") {
+       callback(this.value);
+     }
+   }
+ 
+   breadthFirstForEach(callback) {
+     const queue = [this];
+ 
+     while (queue.length > 0) {
+       const node = queue.shift();
+       callback(node.value);
+ 
+       if (node.left) {
+         queue.push(node.left);
+       }
+ 
+       if (node.right) {
+         queue.push(node.right);
+       }
+     }
+   }
+ }
+ 
 // No modifiquen nada debajo de esta linea
 // --------------------------------
 
